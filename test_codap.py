@@ -1,4 +1,3 @@
-import time
 import unittest
 
 import codap
@@ -48,7 +47,13 @@ class TestKV(unittest.TestCase):
             assert v == 2, 'Expected q.get() to be 2 but it was {0}'.format(v)
 
 
-order = -1
+from urllib2 import urlopen
+
+
+def delay(amount):
+    for x in xrange(0, amount):
+        urlopen('http://google.com')  # Ok way to delay things a bit
+    return amount
 
 
 class TestOrdered(unittest.TestCase):
@@ -57,21 +62,17 @@ class TestOrdered(unittest.TestCase):
         size = 5
         coorder = codap.Ordered()
 
-        def o():
-            global order
-            order += 1
-            return order
+        def o(x):
+            return x
 
-        for _ in xrange(0, size):
-            coorder.append(o)
+        for x in reversed(xrange(0, size)):
+            coorder.push(delay, x)
 
         assert len(coorder) == size, 'Expected to be the riht size'
-        c = 0
+        c = size - 1
         for v in coorder:
-            assert v == c, 'Expected v to be 2 but was {0}'.format(v)
-            c += 1
-
-from urllib2 import urlopen
+            assert v == c, 'Expected v to be {0} but was {1}'.format(c, v)
+            c -= 1
 
 
 class TestFirstReply(unittest.TestCase):
@@ -86,17 +87,11 @@ class TestFirstReply(unittest.TestCase):
         for p in fr:
             assert p == 2, 'Expected 2 but got {0}'.format(p)
 
-        def delay(amount):
-            t = amount * amount
-            for x in xrange(0, amount):
-                urlopen('http://google.com')  # Ok way to delay things a bit
-            return t
         start = 0
         for x in reversed(xrange(start, 4)):
             fr.push(delay, x)
 
         c = start
         for x in fr:
-            y = c * c
-            assert y == x, 'Expected {0} but got {1}'.format(c, x)
+            assert x == c, 'Expected {0} but got {1}'.format(c, x)
             c += 1

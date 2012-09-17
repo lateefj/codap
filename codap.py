@@ -114,8 +114,7 @@ class Ordered:
         self.index = 0
 
     def __add__(self, x):
-        self.kv[self.size] = x
-        self.size += 1
+        self.push(x)
 
     def __getitem__(self, i):
         print('{0} for in {1}'.format(i, self.kv.keys()))
@@ -145,6 +144,10 @@ class Ordered:
         else:
             raise StopIteration
         return v
+
+    def push(self, *args, **kwargs):
+        self.kv.put(self.size, *args, **kwargs)
+        self.size += 1
 
     append = __add__
 
