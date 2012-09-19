@@ -74,6 +74,16 @@ class TestOrdered(unittest.TestCase):
             assert v == c, 'Expected v to be {0} but was {1}'.format(c, v)
             c -= 1
 
+        c = size - 1
+        for v in coorder:
+            assert v == c, 'Expected v to be {0} but was {1}'.format(c, v)
+            c -= 1
+
+        c = size - 1
+        for v in coorder:
+            assert v == c, 'Expected v to be {0} but was {1}'.format(c, v)
+            c -= 1
+
 
 class TestFirstReply(unittest.TestCase):
 

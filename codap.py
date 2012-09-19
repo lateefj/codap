@@ -138,10 +138,11 @@ class Ordered:
 
     def next(self):
         v = None
-        if self.index < self.size:
+        if self.index < len(self.kv.keys()):
             v = self.kv[self.index]
             self.index += 1
         else:
+            self.index = 0
             raise StopIteration
         return v
 
