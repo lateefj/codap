@@ -42,7 +42,7 @@ except:
         from eventlet import spawn
         from eventlet.queue import Queue
         import eventlet
-        eventlet.monkey_patch(socket=True, select=True)
+        eventlet.monkey_patch(all=True)
 
     except:
         # Fall back to using threads
