@@ -47,16 +47,12 @@ class TestKV(unittest.TestCase):
             assert v == 2, 'Expected q.get() to be 2 but it was {0}'.format(v)
 
 
-import sys
-if sys.version_info[0] == 3: # Python 3 different different standard library packagin
-    from urllib.request import urlopen
-else:
-    from urllib2 import urlopen
-
+import time
 
 def delay(amount):
-    for x in range(0, amount):
-        urlopen('http://google.com')  # Ok way to delay things a bit
+    # Would like ot use something a little more asymetric like urlopen
+    if amount > 0:
+        time.sleep(float(amount)/100)
     return amount
 
 
