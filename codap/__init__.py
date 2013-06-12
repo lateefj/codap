@@ -17,18 +17,26 @@ concurrent so that there would be less IO wait. Warning more traditional RDBMS m
 performance compared to caches or datastores that are distributed.
 
 """
+import sys
 # Thread worst case but this will not scale well at all
-from Queue import Queue as ThreadQueue
-from thread import start_new_thread
+if sys.version_info[0] == 3: # Python 3 different different standard library packagin
+    from queue import Queue as ThreadQueue
+else:
+    from Queue import Queue as ThreadQueue
+from threading import Thread
+
+
 def thread_spawn(*args, **kwargs):
     """
     Wrapper that acts like the coroutine libraries. Nothing really to
     see here.
     """
+    t = None
     if len(args) == 1 and not kwargs:
-        start_new_thread(args[0], ())
+        t = Thread(target=args[0], args=())
     else:
-        start_new_thread(*args, **kwargs)
+        t = Thread(target=args[0], args=args[0:], kwargs=kwargs)
+    t.start()
 
 try:
     # Prever gevent as it would be fastest
@@ -135,8 +143,7 @@ class Ordered:
 
     def __iter__(self):
         return self
-
-    def next(self):
+    def __next__(self):
         v = None
         if self.index < len(self.kv.keys()):
             v = self.kv[self.index]
@@ -145,6 +152,7 @@ class Ordered:
             self.index = 0
             raise StopIteration
         return v
+    next = __next__ # Python 2.x backport
 
     def push(self, *args, **kwargs):
         self.kv.put(self.size, *args, **kwargs)
@@ -181,7 +189,7 @@ class FirstReply:
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         v = None
         if self.index < self.size:
             v = self.q.get()
@@ -189,6 +197,6 @@ class FirstReply:
         else:
             raise StopIteration
         return v
-
+    next = __next__ # Python 2.x backport
     __add__ = push
     append = push

@@ -11,7 +11,7 @@ class TestKV(unittest.TestCase):
             return 2
         def t(n):
             return n*n
-        r = xrange(0, 100)
+        r = range(0, 100)
         for x in r:
             kv[x] = two
         for x in r:
@@ -47,11 +47,15 @@ class TestKV(unittest.TestCase):
             assert v == 2, 'Expected q.get() to be 2 but it was {0}'.format(v)
 
 
-from urllib2 import urlopen
+import sys
+if sys.version_info[0] == 3: # Python 3 different different standard library packagin
+    from urllib.request import urlopen
+else:
+    from urllib2 import urlopen
 
 
 def delay(amount):
-    for x in xrange(0, amount):
+    for x in range(0, amount):
         urlopen('http://google.com')  # Ok way to delay things a bit
     return amount
 
@@ -65,7 +69,7 @@ class TestOrdered(unittest.TestCase):
         def o(x):
             return x
 
-        for x in reversed(xrange(0, size)):
+        for x in reversed(range(0, size)):
             coorder.push(delay, x)
 
         assert len(coorder) == size, 'Expected to be the riht size'
@@ -92,13 +96,13 @@ class TestFirstReply(unittest.TestCase):
 
         def two():
             return 2
-        for x in xrange(0, 100):
+        for x in range(0, 100):
             fr.push(two)
         for p in fr:
             assert p == 2, 'Expected 2 but got {0}'.format(p)
 
         start = 0
-        for x in reversed(xrange(start, 4)):
+        for x in reversed(range(start, 4)):
             fr.push(delay, x)
 
         c = start
