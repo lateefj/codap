@@ -1,6 +1,8 @@
 codap
 =====
 
+[![Travis Build Status](https://travis-ci.org/lateefj/codap)](https://api.travis-ci.org/lateefj/codap.png?branch=master)
+
 Coroutine Data Access Patterns (codap) are a handful of libraries to make concurrent data access simpler to use. This was originally developed for web services access data in mutliple datastores (MongoDB, S3, REST, ect). The library uses async methods (thread, eventlet or gevent) which degrades gracefully. Perfering gevent, eventlet and falling back to threading. One of those things it would be really nice to have anonymous functions in Python :(.
 
 
