@@ -6,7 +6,7 @@ access patterns I found useful building web applications that use gevent or
 evenlet. They mimic common Python data types like lists and dictionaries."""
 setup(
     name = 'codap',
-    version = '0.0.2',
+    version = '0.0.3',
     author = 'Lateef Jackson',
     author_email = 'lateef.jackson@gmail.com',
     description = (DESCRIPTION),
