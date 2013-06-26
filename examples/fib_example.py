@@ -11,7 +11,7 @@ def fib(n):
 
 FIB_SIZE = 30
 d = codap.KV()
-# Push a bunch of fib processing into the backgroun
+# Push a bunch of fib processing into the background
 for i in range(0, FIB_SIZE):
     d.put(i, fib, i)
 
