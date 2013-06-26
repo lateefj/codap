@@ -65,7 +65,7 @@ Fibonacci Example (full):
 -------------------------
 
 ```python
-mport codap
+import codap
 
 
 def fib(n):
