@@ -25,7 +25,6 @@ else:
     from Queue import Queue as ThreadQueue
 from threading import Thread
 
-
 def thread_spawn(*args, **kwargs):
     """
     Wrapper that acts like the coroutine libraries. Nothing really to
@@ -35,7 +34,7 @@ def thread_spawn(*args, **kwargs):
     if len(args) == 1 and not kwargs:
         t = Thread(target=args[0], args=())
     else:
-        t = Thread(target=args[0], args=args[0:], kwargs=kwargs)
+        t = Thread(target=args[0], args=args[1:], kwargs=kwargs)
     t.start()
 
 try:
@@ -56,7 +55,6 @@ except:
         # Fall back to using threads
         Queue = ThreadQueue
         spawn = thread_spawn
-
 
 
 class KV(dict):

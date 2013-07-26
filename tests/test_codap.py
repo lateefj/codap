@@ -105,3 +105,29 @@ class TestFirstReply(unittest.TestCase):
         for x in fr:
             assert x == c, 'Expected {0} but got {1}'.format(c, x)
             c += 1
+
+
+class TestUtils(unittest.TestCase):
+    count = 0
+
+    def setUp(self):
+        TestUtils.count = 0
+
+    def test_queue_spawn(self):
+        size = 10
+        tq = codap.Queue()
+        run = True
+        def handle(q):
+            while run:
+                m = q.get()
+                TestUtils.count += 1
+        codap.spawn(handle, tq)
+        for x in range(0, size):
+            tq.put(x)
+        delay(1)
+        assert size == TestUtils.count, 'Expected size: {0} to be count: {1}'.format(size, TestUtils.count)
+        run = False
+        tq.put(0)
+
+
+
