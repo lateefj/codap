@@ -38,18 +38,18 @@ def thread_spawn(*args, **kwargs):
     t.start()
 
 try:
-    # Prever gevent as it would be fastest
+    # Prefer gevent as it would be fastest
     from gevent import spawn
     from gevent.queue import Queue
     import gevent
-    gevent.monkey.patch_all()
+    gevent.monkey.patch_all() # Required if we want IO to be concurrent
 except:
     try:
         # Eventlet we are also fans of so that would be great
         from eventlet import spawn
         from eventlet.queue import Queue
         import eventlet
-        eventlet.monkey_patch(all=True)
+        eventlet.monkey_patch(all=True) # To support concurrent IO
 
     except:
         # Fall back to using threads
