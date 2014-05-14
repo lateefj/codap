@@ -18,40 +18,41 @@ performance compared to caches or datastores that are distributed.
 
 """
 import sys
-# Thread worst case but this will not scale well at all
-if sys.version_info[0] == 3: # Python 3 different different standard library packagin
-    from queue import Queue as ThreadQueue
-else:
-    from Queue import Queue as ThreadQueue
-from threading import Thread
 
-def thread_spawn(*args, **kwargs):
-    """
-    Wrapper that acts like the coroutine libraries. Nothing really to
-    see here.
-    """
-    t = None
-    if len(args) == 1 and not kwargs:
-        t = Thread(target=args[0], args=())
-    else:
-        t = Thread(target=args[0], args=args[1:], kwargs=kwargs)
-    t.start()
 
 try:
     # Prefer gevent as it would be fastest
     from gevent import spawn
     from gevent.queue import Queue
-    import gevent
-    gevent.monkey.patch_all() # Required if we want IO to be concurrent
+    from gevent import monkey
+    monkey.patch_socket()  # Required if we want IO to be concurrent
 except:
     try:
         # Eventlet we are also fans of so that would be great
         from eventlet import spawn
         from eventlet.queue import Queue
         import eventlet
-        eventlet.monkey_patch(all=True) # To support concurrent IO
+        eventlet.monkey_patch(all=True)  # To support concurrent IO
 
     except:
+        # Thread worst case but this will not scale well at all
+        if sys.version_info[0] == 3:  # Python 3
+            from queue import Queue as ThreadQueue
+        else:
+            from Queue import Queue as ThreadQueue
+        from threading import Thread
+
+        def thread_spawn(*args, **kwargs):
+            """
+            Wrapper that acts like the coroutine libraries. Nothing really to
+            see here.
+            """
+            t = None
+            if len(args) == 1 and not kwargs:
+                t = Thread(target=args[0], args=())
+            else:
+                t = Thread(target=args[0], args=args[1:], kwargs=kwargs)
+                t.start()
         # Fall back to using threads
         Queue = ThreadQueue
         spawn = thread_spawn
